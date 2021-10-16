@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TiendaOnline.BL
 {
-   public  class CategoriasBL
+    public class CategoriasBL
     {
         Contexto _contexto;
         public List<Categoria> ListadeCategorias { get; set; }
@@ -15,8 +15,8 @@ namespace TiendaOnline.BL
         {
             _contexto = new Contexto();
             ListadeCategorias = new List<Categoria>();
-
         }
+
         public List<Categoria> ObtenerCategorias()
         {
             ListadeCategorias = _contexto.Categorias.ToList();
@@ -54,5 +54,4 @@ namespace TiendaOnline.BL
         }
     }
 }
-
 

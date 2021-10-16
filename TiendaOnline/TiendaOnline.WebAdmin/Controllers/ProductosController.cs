@@ -37,11 +37,30 @@ namespace TiendaOnline.WebAdmin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Crear(Producto producto)
+        public ActionResult Crear(Producto producto, HttpPostedFileBase imagen)
         {
-            _productosBL.GuardarProducto(producto);
+            if(ModelState.IsValid)
+            {
+                if(producto.CategoriaId == 0)
+                {
+                    ModelState.AddModelError("CategoriaId", "seleccione una categoria");
+                    return View(producto);
+                }
 
-            return RedirectToAction("Index");
+                if (imagen != null)
+                {
+                    producto.UrlImagen = GuardarImagen(imagen);
+                }
+
+                _productosBL.GuardarProducto(producto);
+
+                return RedirectToAction("Index");
+            }
+            var categorias = _categoriasBL.ObtenerCategorias();
+
+            ViewBag.CategoriaId = new SelectList(categorias, "Id", "Descripcion");
+
+            return View(producto);
 
         }
         public ActionResult Editar(int id)
@@ -57,9 +76,22 @@ namespace TiendaOnline.WebAdmin.Controllers
         [HttpPost]
         public ActionResult Editar(Producto producto)
         {
-            _productosBL.GuardarProducto(producto);
+            if (ModelState.IsValid)
+            {
+                if (producto.CategoriaId == 0)
+                {
+                    ModelState.AddModelError("CategoriaId", "seleccione una categoria");
+                    return View(producto);
+                }
+                _productosBL.GuardarProducto(producto);
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            var categorias = _categoriasBL.ObtenerCategorias();
+
+            ViewBag.CategoriaId = new SelectList(categorias, "Id", "Descripcion");
+
+            return View(producto);
         }
 
         public ActionResult Detalle(int id)
@@ -84,6 +116,12 @@ namespace TiendaOnline.WebAdmin.Controllers
             _productosBL.EliminarProducto(producto.Id);
 
             return RedirectToAction("Index");
+        }
+        private string GuardarImagen(HttpPostedFileBase imagen)
+        {
+            string path = Server.MapPath("~/Imagenes/" + imagen.FileName);
+                imagen.SaveAs(path);
+            return "/Imagenes/" + imagen.FileName;
         }
     }
 }
