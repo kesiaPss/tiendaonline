@@ -20,7 +20,19 @@ namespace TiendaOnline.BL
         {
             ListadeProductos = _contexto.Productos
                 .Include("Categoria")
+                .OrderBy(r => r.Categoria.Descripcion)
+                .ThenBy(r => r. Descripcion)
                 .ToList();
+
+            return ListadeProductos;
+        }
+        public List<Producto> ObtenerProductosActivos()
+        {
+            ListadeProductos=_contexto.Productos
+                .Include("Categoria")
+               .Where(r=> r.Activo == true &&r.CategoriaId == 1)
+               .OrderBy(r => r.Descripcion)
+               .ToList();
 
             return ListadeProductos;
         }
@@ -59,4 +71,6 @@ namespace TiendaOnline.BL
             _contexto.SaveChanges();
         }
     }
-}
+ }
+
+
