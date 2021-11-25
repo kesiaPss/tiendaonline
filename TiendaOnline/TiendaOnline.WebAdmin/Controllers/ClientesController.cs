@@ -8,6 +8,7 @@ using TiendaOnline.BL;
 
 namespace TiendaOnline.WebAdmin.Controllers
 {
+    [Authorize]
     public class ClientesController : Controller
     {
 
